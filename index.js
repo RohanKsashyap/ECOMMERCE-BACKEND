@@ -10,8 +10,23 @@ dotenv.config();
 
 const app = express();
 
+
+
+
+
+// defining origin,and methods
+const corsOption = {
+  // defining origin,and methods
+      origin:["https://ecommerce-frontend-ochre-two.vercel.app/"],
+      methods:"GET,POST,PUT,DELETE,PATCH,HEAD",
+      allowedHeaders:["Content-Type", "Authorization"],
+      credentials:true
+  }
+
+
 // Middleware
 app.use(cors());
+app.options("*", cors(corsOption));
 app.use(express.json());
 
 // MongoDB connection
