@@ -1,3 +1,4 @@
+
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -29,6 +30,8 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  address: { type: String, required: true },
+  avatarUrl: { type: String, required: true },
   isAdmin: { type: Boolean, required: true, default: false },
   createdAt: { type: Date, default: Date.now }
 });
@@ -53,11 +56,13 @@ const orderSchema = new mongoose.Schema({
       product: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Product' }
     }
   ],
-  shippingAddress: {
+  shippingInfo: {
     address: { type: String, required: true },
     city: { type: String, required: true },
     postalCode: { type: String, required: true },
-    country: { type: String, required: true }
+    country: { type: String, required: true },
+    state: { type: String, required: true },
+    phone: { type: String, required: true }
   },
   paymentMethod: { type: String, required: true },
   taxPrice: { type: Number, required: true, default: 0.0 },
@@ -221,7 +226,7 @@ app.post('/api/orders', protect, async (req, res) => {
   try {
     console.log("Order Request Body:", req.body);
 
-    const { orderItems, shippingAddress, paymentMethod, taxPrice, shippingPrice, totalPrice } = req.body;
+    const { orderItems, shippingInfo, paymentMethod, taxPrice, shippingPrice, totalPrice } = req.body;
 
     if (!orderItems || orderItems.length === 0) {
       console.log("No order items found in request!");
@@ -233,7 +238,7 @@ app.post('/api/orders', protect, async (req, res) => {
     const order = new Order({
       user: req.user._id,  // Comes from `protect` middleware
       orderItems,
-      shippingAddress,
+      shippingInfo,
       paymentMethod,
       taxPrice,
       shippingPrice,
