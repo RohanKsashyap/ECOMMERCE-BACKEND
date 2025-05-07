@@ -40,7 +40,6 @@ const connectDB = async () => {
   }
 };
 
-import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
@@ -221,18 +220,6 @@ app.delete("/:email/:index", async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // products
 app.get('/api/products', async (req, res) => {
   try {
@@ -342,16 +329,6 @@ app.post('/api/orders', protect, async (req, res) => {
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 });
-
-
-
-
-
-
-
-
-
-
 
 
 
