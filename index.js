@@ -17,7 +17,7 @@ const app = express();
 // defining origin,and methods
 const corsOption = {
   // defining origin,and methods
-      origin:["https://ecommerce-frontend-ochre-two.vercel.app/"],
+      origin:["https://ecommerce-frontend-ochre-two.vercel.app/","http://localhost:5173/"],
       methods:"GET,POST,PUT,DELETE,PATCH,HEAD",
       allowedHeaders:["Content-Type", "Authorization"],
       credentials:true
@@ -25,7 +25,7 @@ const corsOption = {
 
 
 // Middleware
-app.use(cors());
+app.use(cors(corsOption));
 app.options("*", cors(corsOption));
 app.use(express.json());
 
@@ -56,7 +56,6 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   addresses: { type: [addressSchema], default: [] }, // <-- Updated here
-  avatarUrl: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
 });
