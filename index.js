@@ -189,14 +189,14 @@ app.get('/api/users/profile', protect, async (req, res) => {
 
 
 // Get addresses
-app.get("/:email", async (req, res) => {
+app.get(`/api/users/addresses`, async (req, res) => {
   const user = await User.findOne({ email: req.params.email });
   if (!user) return res.status(404).send("User not found");
   res.json(user.addresses);
 });
 
 // Add address
-app.post("/:email", async (req, res) => {
+app.post("/api/add/addresses", async (req, res) => {
   const user = await User.findOne({ email: req.params.email });
   if (!user) return res.status(404).send("User not found");
 
