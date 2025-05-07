@@ -40,16 +40,30 @@ const connectDB = async () => {
   }
 };
 
-// Define schemas
+import mongoose from "mongoose";
+
+const addressSchema = new mongoose.Schema({
+  fullName: { type: String, required: true },
+  address: { type: String, required: true },
+  city: { type: String, required: true },
+  state: { type: String, required: true },
+  postalCode: { type: String, required: true },
+  country: { type: String, required: true },
+  phone: { type: String, required: true },
+});
+
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  address: { type: String, required: true },
+  addresses: { type: [addressSchema], default: [] }, // <-- Updated here
   avatarUrl: { type: String, required: true },
-  isAdmin: { type: Boolean, required: true, default: false },
-  createdAt: { type: Date, default: Date.now }
+  isAdmin: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
 });
+
+export default mongoose.models.User || mongoose.model("User", userSchema);
+
 
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -173,6 +187,47 @@ app.get('/api/users/profile', protect, async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 });
+
+
+// Get addresses
+app.get("/:email", async (req, res) => {
+  const user = await User.findOne({ email: req.params.email });
+  if (!user) return res.status(404).send("User not found");
+  res.json(user.addresses);
+});
+
+// Add address
+app.post("/:email", async (req, res) => {
+  const user = await User.findOne({ email: req.params.email });
+  if (!user) return res.status(404).send("User not found");
+
+  user.addresses.push(req.body);
+  await user.save();
+  res.json(user.addresses);
+});
+
+// Delete address
+app.delete("/:email/:index", async (req, res) => {
+  const user = await User.findOne({ email: req.params.email });
+  if (!user) return res.status(404).send("User not found");
+
+  user.addresses.splice(req.params.index, 1);
+  await user.save();
+  res.json(user.addresses);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
